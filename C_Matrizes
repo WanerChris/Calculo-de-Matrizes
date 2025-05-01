@@ -1,0 +1,60 @@
+#include <iostream>
+#include <cstdlib>
+#include <time.h>
+#include <omp.h>
+
+#define N 5
+
+using namespace std;
+
+void C_Matriz(int A[N][N], int B[N][N], int C[N][N]) {
+#pragma omp parallel for collapse(2)
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			C[i][j] = 0;
+			for (int k = 0; k < N; k++) {
+				C[i][j] += A[i][k] * B[k][j];
+			}
+		}
+	}
+
+
+}
+int main() {
+	int A[N][N], B[N][N], C[N][N];
+
+	srand(time(NULL));
+
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			A[i][j] = rand() % 10;
+			B[i][j] = rand() % 10;
+		}
+	}
+	cout << "Matriz A" << endl;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			cout << A[i][j] << " ";
+		}
+		cout << endl;
+	}
+
+	cout << "Matriz B" << endl;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			cout << B[i][j] << " ";
+		}
+		cout << endl;
+	}
+	C_Matriz(A, B, C);
+
+	cout << "Resultado:" << endl;
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++) {
+			cout << C[i][j] << " ";
+		}
+		cout << endl;
+	}
+
+	return 0;
+}
